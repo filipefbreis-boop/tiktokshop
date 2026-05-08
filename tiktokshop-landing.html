@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok Shop — Do Zero à Primeira Venda</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #EE1D52;
+    --red-dark: #c4133e;
+    --cyan: #69C9D0;
+    --black: #010101;
+    --white: #ffffff;
+    --gray: #f0f0f0;
+    --text: #1a1a1a;
+    --muted: #666;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 5rem 1.5rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 30%, rgba(238,29,82,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 80% 80%, rgba(105,201,208,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-noise {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px;
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(238,29,82,0.15);
+    border: 1px solid rgba(238,29,82,0.4);
+    color: var(--red);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .badge-dot { width: 7px; height: 7px; background: var(--red); border-radius: 50%; animation: pulse 1.5s infinite; }
+
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4.5rem, 14vw, 10rem);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    animation: fadeDown 0.7s 0.1s ease both;
+  }
+
+  .hero-title span { color: var(--red); }
+  .hero-title .cyan { color: var(--cyan); }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    max-width: 600px;
+    margin: 1.5rem auto 0;
+    line-height: 1.6;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+
+  .hero-cta {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    animation: fadeUp 0.7s 0.5s ease both;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 1rem 2.5rem;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    transition: background 0.2s, transform 0.15s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover { background: var(--red-dark); transform: translateY(-2px); }
+
+  .price-hint { font-size: 0.85rem; color: rgba(255,255,255,0.45); }
+  .price-hint strong { color: var(--white); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    animation: fadeIn 1s 1s ease both;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+
+  @keyframes scrollPulse { 0%,100%{transform:scaleY(1);opacity:1} 50%{transform:scaleY(0.6);opacity:0.4} }
+
+  /* ── SOCIAL PROOF BAR ── */
+  .proof-bar {
+    background: rgba(255,255,255,0.04);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem 3rem;
+  }
+
+  .proof-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .proof-icon { font-size: 1.2rem; }
+  .proof-item strong { color: var(--white); }
+
+  /* ── SECTION BASE ── */
+  section { padding: 5rem 1.5rem; }
+
+  .container { max-width: 900px; margin: 0 auto; }
+  .container-wide { max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-body {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.8;
+    max-width: 640px;
+  }
+
+  /* ── DOR ── */
+  .dor-section { background: var(--black); }
+
+  .dor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 3rem;
+  }
+
+  .dor-item {
+    background: #0a0a0a;
+    padding: 2rem 1.75rem;
+    transition: background 0.2s;
+  }
+
+  .dor-item:hover { background: #111; }
+
+  .dor-x {
+    width: 32px; height: 32px;
+    background: rgba(238,29,82,0.12);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    color: var(--red);
+    margin-bottom: 1rem;
+  }
+
+  .dor-item h3 { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.4rem; }
+  .dor-item p { font-size: 0.85rem; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+  /* ── PARA QUEM ── */
+  .paraquem-section { background: #070707; }
+
+  .paraquem-list { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1px; }
+
+  .paraquem-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .check {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    background: rgba(105,201,208,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    color: var(--cyan);
+    margin-top: 2px;
+  }
+
+  .paraquem-item p { font-size: 1rem; color: rgba(255,255,255,0.8); line-height: 1.6; }
+
+  /* ── O QUE APRENDE ── */
+  .aprende-section { background: var(--black); }
+
+  .capitulos { margin-top: 3rem; display: flex; flex-direction: column; gap: 1px; }
+
+  .cap {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .cap-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: rgba(238,29,82,0.35);
+    line-height: 1;
+    padding-top: 2px;
+  }
+
+  .cap-title { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.3rem; }
+  .cap-desc { font-size: 0.85rem; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+  /* ── HOOKS PREVIEW ── */
+  .hooks-section {
+    background: #070707;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hooks-marquee-wrap {
+    margin-top: 2.5rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hooks-track {
+    display: flex;
+    gap: 12px;
+    animation: marquee 30s linear infinite;
+    width: max-content;
+  }
+
+  .hooks-track.reverse { animation-direction: reverse; }
+
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  .hook-pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 100px;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    color: rgba(255,255,255,0.7);
+    flex-shrink: 0;
+  }
+
+  .hook-pill.red { border-color: rgba(238,29,82,0.3); color: rgba(238,29,82,0.8); }
+  .hook-pill.cyan { border-color: rgba(105,201,208,0.3); color: rgba(105,201,208,0.8); }
+
+  /* ── BONUS ── */
+  .bonus-section { background: var(--black); }
+
+  .bonus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 3rem;
+  }
+
+  .bonus-card {
+    background: linear-gradient(135deg, rgba(238,29,82,0.08), rgba(105,201,208,0.04));
+    border: 1px solid rgba(238,29,82,0.2);
+    border-radius: 8px;
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .bonus-card:hover { border-color: rgba(238,29,82,0.4); }
+
+  .bonus-card::before {
+    content: 'GRÁTIS';
+    position: absolute;
+    top: 12px; right: -20px;
+    background: var(--red);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 4px 28px;
+    transform: rotate(35deg);
+  }
+
+  .bonus-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .bonus-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .bonus-card p { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+  /* ── DEPOIMENTOS ── */
+  .dep-section { background: #070707; }
+
+  .dep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 3rem;
+  }
+
+  .dep-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  .stars { color: #f5c518; font-size: 0.85rem; margin-bottom: 1rem; letter-spacing: 2px; }
+  .dep-text { font-size: 0.9rem; color: rgba(255,255,255,0.75); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
+  .dep-author { display: flex; align-items: center; gap: 10px; }
+
+  .dep-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .dep-name { font-size: 0.85rem; font-weight: 500; }
+  .dep-role { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+
+  /* ── AUTHOR ── */
+  .author-section { background: var(--black); }
+
+  .author-box {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 600px) { .author-box { grid-template-columns: 1fr; } }
+
+  .author-img-wrap {
+    aspect-ratio: 1;
+    background: rgba(238,29,82,0.1);
+    border: 2px solid rgba(238,29,82,0.25);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+  }
+
+  .author-name { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .author-role { font-size: 0.85rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.25rem; }
+  .author-bio { font-size: 0.95rem; color: rgba(255,255,255,0.65); line-height: 1.8; }
+
+  /* ── FAQ ── */
+  .faq-section { background: #070707; }
+
+  .faq-list { margin-top: 3rem; display: flex; flex-direction: column; gap: 1px; }
+
+  details {
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  summary {
+    padding: 1.25rem 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    color: rgba(255,255,255,0.9);
+    user-select: none;
+  }
+
+  summary::-webkit-details-marker { display: none; }
+
+  summary::after {
+    content: '+';
+    font-size: 1.3rem;
+    color: var(--red);
+    font-weight: 300;
+    transition: transform 0.2s;
+  }
+
+  details[open] summary::after { transform: rotate(45deg); }
+
+  details p {
+    padding: 0 0 1.25rem;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.8;
+  }
+
+  /* ── CTA FINAL ── */
+  .cta-section {
+    background: var(--black);
+    text-align: center;
+    padding: 6rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 70% at 50% 100%, rgba(238,29,82,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    margin: 2rem 0 1.5rem;
+  }
+
+  .price-from { font-size: 0.85rem; color: rgba(255,255,255,0.4); text-decoration: line-through; }
+  .price-currency { font-size: 1.2rem; color: rgba(255,255,255,0.6); }
+  .price-value { font-family: 'Bebas Neue', sans-serif; font-size: 5rem; line-height: 1; color: var(--white); }
+  .price-cents { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--white); align-self: flex-start; padding-top: 0.8rem; }
+
+  .cta-guarantee {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .cta-guarantee .shield { font-size: 1rem; color: var(--cyan); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #000;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.25);
+    line-height: 1.8;
+  }
+
+  footer a { color: rgba(255,255,255,0.35); text-decoration: none; }
+  footer a:hover { color: rgba(255,255,255,0.6); }
+
+  /* ── STICKY BAR ── */
+  .sticky-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(5,5,5,0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(238,29,82,0.3);
+    padding: 0.9rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    z-index: 100;
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+    flex-wrap: wrap;
+  }
+
+  .sticky-bar.visible { transform: translateY(0); }
+  .sticky-bar p { font-size: 0.88rem; color: rgba(255,255,255,0.6); }
+  .sticky-bar strong { color: var(--white); }
+
+  @media (max-width: 480px) {
+    .sticky-bar p { display: none; }
+    .sticky-bar .btn-primary { width: 100%; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-noise"></div>
+  <div class="badge">
+    <span class="badge-dot"></span>
+    Novo · Guia completo em português
+  </div>
+  <h1 class="hero-title">
+    TIKTOK<br>
+    <span>SHOP</span>
+  </h1>
+  <p class="hero-sub">
+    Como transformar vídeos simples em uma máquina de vendas — mesmo sem seguidores, sem câmera profissional e sem experiência prévia.
+  </p>
+  <div class="hero-cta">
+    <a href="SEU_LINK_HOTMART_AQUI" class="btn-primary">Quero começar a vender agora →</a>
+    <p class="price-hint">Acesso imediato · <strong>Garantia de 7 dias</strong></p>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Saiba mais
+  </div>
+</section>
+
+<!-- ── PROOF BAR ── -->
+<div class="proof-bar">
+  <div class="proof-item"><span class="proof-icon">📱</span> <span>Funciona no <strong>celular</strong></span></div>
+  <div class="proof-item"><span class="proof-icon">⚡</span> <span>Acesso <strong>imediato</strong></span></div>
+  <div class="proof-item"><span class="proof-icon">🎁</span> <span><strong>4 bônus</strong> incluídos</span></div>
+  <div class="proof-item"><span class="proof-icon">🛡️</span> <span>Garantia de <strong>7 dias</strong></span></div>
+  <div class="proof-item"><span class="proof-icon">📋</span> <span><strong>11 capítulos</strong> completos</span></div>
+</div>
+
+<!-- ── DOR ── -->
+<section class="dor-section">
+  <div class="container">
+    <p class="section-label">Você se identifica?</p>
+    <h2 class="section-title">Esses problemas<br>te parecem familiares?</h2>
+    <div class="dor-grid">
+      <div class="dor-item">
+        <div class="dor-x">✕</div>
+        <h3>Não sabe por onde começar</h3>
+        <p>Você vê pessoas vendendo no TikTok todos os dias mas não entende como elas fazem isso.</p>
+      </div>
+      <div class="dor-item">
+        <div class="dor-x">✕</div>
+        <h3>Tentou e não vendeu nada</h3>
+        <p>Postou alguns vídeos, mas eles ficaram com zero visualizações e zero vendas.</p>
+      </div>
+      <div class="dor-item">
+        <div class="dor-x">✕</div>
+        <h3>Não sabe qual produto escolher</h3>
+        <p>Tem medo de investir em um produto errado e perder dinheiro sem retorno.</p>
+      </div>
+      <div class="dor-item">
+        <div class="dor-x">✕</div>
+        <h3>Não consegue chamar atenção</h3>
+        <p>Seus vídeos não prendem as pessoas. Elas assistem 2 segundos e rolam para o próximo.</p>
+      </div>
+      <div class="dor-item">
+        <div class="dor-x">✕</div>
+        <h3>Perde tempo e não sai do lugar</h3>
+        <p>Você grava, edita, posta — mas o resultado não aparece e a motivação vai embora.</p>
+      </div>
+      <div class="dor-item">
+        <div class="dor-x">✕</div>
+        <h3>Não entende o algoritmo</h3>
+        <p>Parece que o TikTok mostra o vídeo para quem não tem interesse em comprar nada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PARA QUEM ── -->
+<section class="paraquem-section">
+  <div class="container">
+    <p class="section-label">Público ideal</p>
+    <h2 class="section-title">Este ebook é<br>feito para você se...</h2>
+    <div class="paraquem-list">
+      <div class="paraquem-item"><div class="check">✓</div><p>Você quer uma <strong>renda extra</strong> sem sair de casa, usando só o celular</p></div>
+      <div class="paraquem-item"><div class="check">✓</div><p>Você é <strong>empreendedor</strong> e quer expandir suas vendas para o TikTok Shop</p></div>
+      <div class="paraquem-item"><div class="check">✓</div><p>Você é <strong>criador de conteúdo</strong> e quer finalmente monetizar seu perfil</p></div>
+      <div class="paraquem-item"><div class="check">✓</div><p>Você já tentou vender online antes e <strong>não conseguiu resultados</strong></p></div>
+      <div class="paraquem-item"><div class="check">✓</div><p>Você está começando do <strong>zero</strong> e precisa de um passo a passo completo e claro</p></div>
+      <div class="paraquem-item"><div class="check">✓</div><p>Você quer aprender a fazer vídeos que <strong>vendem de verdade</strong>, não só que viralizam</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── O QUE APRENDE ── -->
+<section class="aprende-section">
+  <div class="container">
+    <p class="section-label">Conteúdo completo</p>
+    <h2 class="section-title">11 capítulos.<br>Do zero à escala.</h2>
+    <p class="section-body">Um guia passo a passo que cobre tudo — desde abrir sua conta até estratégias para multiplicar sua renda.</p>
+    <div class="capitulos">
+      <div class="cap"><div class="cap-num">01</div><div><div class="cap-title">O que é o TikTok Shop e por que começar agora</div><div class="cap-desc">Entenda a plataforma, os números que comprovam a oportunidade e por que quem entra primeiro tem vantagem.</div></div></div>
+      <div class="cap"><div class="cap-num">02</div><div><div class="cap-title">Como o algoritmo funciona a seu favor</div><div class="cap-desc">Os 6 sinais que o TikTok usa para distribuir seu vídeo e como fazer cada um deles trabalhar para você.</div></div></div>
+      <div class="cap"><div class="cap-num">03</div><div><div class="cap-title">Abrindo sua conta e configurando tudo do zero</div><div class="cap-desc">Passo a passo completo para criar sua conta de vendedor, configurar o perfil e cadastrar o primeiro produto.</div></div></div>
+      <div class="cap"><div class="cap-num">04</div><div><div class="cap-title">Como escolher produtos que realmente vendem</div><div class="cap-desc">A fórmula do produto viral, critérios de avaliação e como pesquisar produtos vencedores sem arriscar seu dinheiro.</div></div></div>
+      <div class="cap"><div class="cap-num">05</div><div><div class="cap-title">Os 20 nichos mais lucrativos do TikTok Shop</div><div class="cap-desc">Os nichos comprovados com maior volume de vendas e por que cada um funciona tão bem na plataforma.</div></div></div>
+      <div class="cap"><div class="cap-num">06</div><div><div class="cap-title">Como criar vídeos que prendem e convertem</div><div class="cap-desc">A estrutura exata do vídeo que vende, os tipos de vídeo que mais convertem e os elementos técnicos que fazem diferença.</div></div></div>
+      <div class="cap"><div class="cap-num">07</div><div><div class="cap-title">50 hooks virais — os 3 segundos que decidem tudo</div><div class="cap-desc">Cinquenta ganchos prontos para usar organizados por categoria: curiosidade, problema, benefício, surpresa e negativos.</div></div></div>
+      <div class="cap"><div class="cap-num">08</div><div><div class="cap-title">Edição profissional sem gastar nada</div><div class="cap-desc">As ferramentas gratuitas, as técnicas que aumentam a retenção e o checklist completo antes de postar.</div></div></div>
+      <div class="cap"><div class="cap-num">09</div><div><div class="cap-title">Frequência, consistência e rotina de postagem</div><div class="cap-desc">Como criar um sistema sustentável de criação de conteúdo e os melhores horários para postar.</div></div></div>
+      <div class="cap"><div class="cap-num">10</div><div><div class="cap-title">Erros fatais que destroem suas vendas</div><div class="cap-desc">Os 10 erros mais comuns de quem está começando — e como evitar cada um deles antes de cometê-los.</div></div></div>
+      <div class="cap"><div class="cap-num">11</div><div><div class="cap-title">Como escalar e multiplicar sua renda</div><div class="cap-desc">Estratégias de repostagem, afiliados, TikTok Ads e Live Shopping para transformar resultados iniciais em renda consistente.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOOKS MARQUEE ── -->
+<section class="hooks-section">
+  <div class="container">
+    <p class="section-label">Bônus incluído</p>
+    <h2 class="section-title">50 hooks virais<br>prontos para usar</h2>
+    <p class="section-body">Copie, adapte e cole. São os primeiros 3 segundos que decidem se seu vídeo vai ser assistido — ou ignorado.</p>
+  </div>
+  <div class="hooks-marquee-wrap" style="margin-top:2.5rem">
+    <div class="hooks-track">
+      <div class="hook-pill red">Eu não acredito que isso é real — mas funciona</div>
+      <div class="hook-pill">Como eu vivi tanto tempo sem isso?</div>
+      <div class="hook-pill cyan">Não compre isso sem ver esse vídeo antes</div>
+      <div class="hook-pill">Isso resolveu um problema que eu tinha há anos</div>
+      <div class="hook-pill red">A maioria das pessoas não sabe que isso existe</div>
+      <div class="hook-pill">Todo mundo deveria ter isso em casa</div>
+      <div class="hook-pill cyan">Eu achei isso inútil… até testar</div>
+      <div class="hook-pill">Esse produto me deixou sem palavras</div>
+      <div class="hook-pill red">Não acredito que isso custa tão barato</div>
+      <div class="hook-pill">Isso parece coisa de futuro — e está disponível agora</div>
+      <div class="hook-pill red">Eu não acredito que isso é real — mas funciona</div>
+      <div class="hook-pill">Como eu vivi tanto tempo sem isso?</div>
+      <div class="hook-pill cyan">Não compre isso sem ver esse vídeo antes</div>
+      <div class="hook-pill">Isso resolveu um problema que eu tinha há anos</div>
+      <div class="hook-pill red">A maioria das pessoas não sabe que isso existe</div>
+    </div>
+    <div class="hooks-track reverse">
+      <div class="hook-pill">Com isso, você faz em 5 min o que levava 1 hora</div>
+      <div class="hook-pill red">Minha reação ao testar disse tudo. Olha.</div>
+      <div class="hook-pill cyan">Esse produto pagou o próprio preço em uma semana</div>
+      <div class="hook-pill">Por que ninguém me mostrou isso antes?</div>
+      <div class="hook-pill red">Se você tem esse problema, presta atenção agora</div>
+      <div class="hook-pill">Todo mundo na minha casa quer um depois que viram isso</div>
+      <div class="hook-pill cyan">Isso vai te poupar pelo menos 1 hora por semana</div>
+      <div class="hook-pill">Nunca mais vou fazer isso do jeito antigo</div>
+      <div class="hook-pill red">Comprei sem expectativa e fiquei boquiaberta</div>
+      <div class="hook-pill">Com isso, você faz em 5 min o que levava 1 hora</div>
+      <div class="hook-pill red">Minha reação ao testar disse tudo. Olha.</div>
+      <div class="hook-pill cyan">Esse produto pagou o próprio preço em uma semana</div>
+      <div class="hook-pill">Por que ninguém me mostrou isso antes?</div>
+      <div class="hook-pill red">Se você tem esse problema, presta atenção agora</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BÔNUS ── -->
+<section class="bonus-section">
+  <div class="container">
+    <p class="section-label">Incluído no ebook</p>
+    <h2 class="section-title">4 bônus exclusivos<br>sem custo adicional</h2>
+    <div class="bonus-grid">
+      <div class="bonus-card">
+        <div class="bonus-icon">⚡</div>
+        <h3>50 Hooks Virais</h3>
+        <p>Cinquenta ganchos prontos divididos por categoria. Copie, adapte e use imediatamente nos seus vídeos.</p>
+      </div>
+      <div class="bonus-card">
+        <div class="bonus-icon">✅</div>
+        <h3>Checklist do Vídeo Viral</h3>
+        <p>Lista completa do que verificar antes e durante a gravação para garantir que nenhum detalhe seja esquecido.</p>
+      </div>
+      <div class="bonus-card">
+        <div class="bonus-icon">🛍️</div>
+        <h3>Guia de Produtos</h3>
+        <p>Critérios detalhados para avaliar se um produto tem potencial viral antes de investir qualquer dinheiro.</p>
+      </div>
+      <div class="bonus-card">
+        <div class="bonus-icon">🎯</div>
+        <h3>Frases de CTA que Convertem</h3>
+        <p>Chamadas para ação prontas para usar no final dos seus vídeos e transformar visualizações em vendas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DEPOIMENTOS ── -->
+<section class="dep-section">
+  <div class="container-wide">
+    <div style="text-align:center; margin-bottom:0.5rem;">
+      <p class="section-label" style="display:inline-block">Resultados reais</p>
+    </div>
+    <h2 class="section-title" style="text-align:center">O que dizem<br>quem já aplicou</h2>
+    <div class="dep-grid" style="margin-top:3rem">
+      <div class="dep-card">
+        <div class="stars">★★★★★</div>
+        <p class="dep-text">"Fiz minha primeira venda 4 dias depois de ler o ebook. O capítulo sobre hooks mudou completamente a forma como eu começo meus vídeos."</p>
+        <div class="dep-author">
+          <div class="dep-avatar" style="background:rgba(238,29,82,0.15);color:var(--red)">AM</div>
+          <div><div class="dep-name">Ana M.</div><div class="dep-role">Iniciante no TikTok Shop</div></div>
+        </div>
+      </div>
+      <div class="dep-card">
+        <div class="stars">★★★★★</div>
+        <p class="dep-text">"Estava travado há meses. Depois de seguir o passo a passo do capítulo 3, finalmente configurei minha loja do jeito certo e comecei a receber pedidos."</p>
+        <div class="dep-author">
+          <div class="dep-avatar" style="background:rgba(105,201,208,0.15);color:var(--cyan)">RB</div>
+          <div><div class="dep-name">Rafael B.</div><div class="dep-role">Vendedor online</div></div>
+        </div>
+      </div>
+      <div class="dep-card">
+        <div class="stars">★★★★★</div>
+        <p class="dep-text">"Os 50 hooks sozinhos já valem muito mais do que o preço do ebook. Minha taxa de retenção aumentou absurdamente depois que comecei a usá-los."</p>
+        <div class="dep-author">
+          <div class="dep-avatar" style="background:rgba(238,29,82,0.15);color:var(--red)">CS</div>
+          <div><div class="dep-name">Camila S.</div><div class="dep-role">Criadora de conteúdo</div></div>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.25);margin-top:1.5rem">* Substitua pelos depoimentos reais dos seus compradores</p>
+  </div>
+</section>
+
+<!-- ── AUTOR ── -->
+<section class="author-section">
+  <div class="container">
+    <p class="section-label">Sobre o autor</p>
+    <div class="author-box">
+      <div class="author-img-wrap">📱</div>
+      <div>
+        <div class="author-name">Seu Nome Aqui</div>
+        <div class="author-role">Especialista em TikTok Shop</div>
+        <p class="author-bio">
+          Substitua este texto pela sua história real. Conte quem você é, como descobriu o TikTok Shop, quais resultados alcançou e por que decidiu criar este material. Histórias reais e específicas convertem muito mais do que textos genéricos. Seja autêntico — as pessoas compram de pessoas.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="faq-section">
+  <div class="container">
+    <p class="section-label">Dúvidas frequentes</p>
+    <h2 class="section-title">Perguntas que<br>você pode ter</h2>
+    <div class="faq-list">
+      <details>
+        <summary>Preciso ter seguidores para começar?</summary>
+        <p>Não. O TikTok Shop funciona pelo alcance orgânico do algoritmo — não pelo número de seguidores. Contas com zero seguidores têm vídeos que chegam a milhares de pessoas todos os dias. O que importa é a qualidade e a estratégia do conteúdo.</p>
+      </details>
+      <details>
+        <summary>Preciso mostrar meu rosto nos vídeos?</summary>
+        <p>Não é obrigatório. Existem diversos formatos de vídeo que funcionam muito bem sem aparecer — demonstrações com a mão, unboxings, antes e depois filmados de cima. O ebook ensina diferentes formatos para você escolher o que funciona melhor para o seu estilo.</p>
+      </details>
+      <details>
+        <summary>Quanto preciso investir para começar?</summary>
+        <p>Você pode começar com muito pouco. O modelo de dropshipping no TikTok Shop permite que você venda sem estoque. Para quem quer testar com produto físico, recomendamos começar com 5 a 10 unidades para validar antes de investir mais.</p>
+      </details>
+      <details>
+        <summary>O ebook funciona para quem já vende em outras plataformas?</summary>
+        <p>Sim. Se você já vende no Mercado Livre, Shopee ou tem uma loja própria, o TikTok Shop pode ser um canal adicional poderoso. O ebook ensina as particularidades da plataforma para quem já tem experiência com e-commerce evoluir mais rápido.</p>
+      </details>
+      <details>
+        <summary>Em quanto tempo recebo o material?</summary>
+        <p>O acesso é imediato após a confirmação do pagamento. Você recebe um link para baixar o ebook e todos os bônus direto no seu e-mail.</p>
+      </details>
+      <details>
+        <summary>E se eu não gostar? Tem garantia?</summary>
+        <p>Sim. Você tem 7 dias de garantia incondicional. Se por qualquer motivo o material não atender suas expectativas, basta solicitar o reembolso e devolvemos 100% do valor sem questionamentos.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA FINAL ── -->
+<section class="cta-section">
+  <div class="container" style="position:relative;z-index:1">
+    <p class="section-label" style="display:inline-block">Oferta especial de lançamento</p>
+    <h2 class="section-title">Comece a vender<br>ainda essa semana</h2>
+    <p class="section-body" style="margin:0 auto 0;text-align:center;color:rgba(255,255,255,0.55)">
+      Acesso imediato ao ebook completo + 4 bônus exclusivos.<br>Uma única vez. Sem mensalidade.
+    </p>
+    <div class="cta-price">
+      <span class="price-from">R$ 97</span>
+      <span class="price-currency">R$</span>
+      <span class="price-value">37</span>
+      <span class="price-cents">,00</span>
+    </div>
+    <a href="SEU_LINK_HOTMART_AQUI" class="btn-primary" style="font-size:1.1rem;padding:1.1rem 3rem">
+      Quero meu acesso agora →
+    </a>
+    <div class="cta-guarantee">
+      <span class="shield">🛡️</span>
+      Garantia incondicional de 7 dias — risco zero para você
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>© 2024 · TikTok Shop — Do Zero à Primeira Venda · Todos os direitos reservados</p>
+  <p style="margin-top:0.5rem">
+    <a href="#">Política de Privacidade</a> &nbsp;·&nbsp;
+    <a href="#">Termos de Uso</a> &nbsp;·&nbsp;
+    <a href="SEU_LINK_HOTMART_AQUI">Comprar</a>
+  </p>
+  <p style="margin-top:1rem;font-size:0.72rem;max-width:500px;margin-left:auto;margin-right:auto">
+    Este produto é vendido pela plataforma Hotmart. Os resultados descritos não são garantidos e variam de acordo com o esforço e dedicação de cada pessoa.
+  </p>
+</footer>
+
+<!-- ── STICKY BAR ── -->
+<div class="sticky-bar" id="stickyBar">
+  <p><strong>TikTok Shop — Do Zero à Primeira Venda</strong> · Oferta de lançamento</p>
+  <a href="SEU_LINK_HOTMART_AQUI" class="btn-primary" style="padding:0.65rem 1.5rem;font-size:0.85rem">
+    Comprar por R$ 37 →
+  </a>
+</div>
+
+<script>
+  const bar = document.getElementById('stickyBar');
+  window.addEventListener('scroll', () => {
+    bar.classList.toggle('visible', window.scrollY > 600);
+  });
+</script>
+</body>
+</html>
